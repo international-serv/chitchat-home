@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CHITCHAT</title>
+    <style>
+        /* Reset and Viewport Lock */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Prevents broken double-scrolling rows */
+        }
+
+        /* Flexbox Stack to handle perfect screen fitting */
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Green Header Frame */
+        header {
+            background-color: #2cb72c; /* Vivid UI Green */
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 99999; /* Higher priority than the chat window wrapper */
+            box-sizing: border-box;
+            flex-shrink: 0; /* Keeps header from squeezing or shifting sizes */
+        }
+
+        /* Left Side Layout (Stacked: Back Button above Profile Row) */
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        /* Back Button - Positioned at the very top left corner above everything */
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: white;
+            padding: 4px 9px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 11px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            background-color: #ffffff;
+            color: #2cb72c;
+        }
+
+        /* Profile Layout Row (Avatar + Info Stack) */
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* White Profile Circle */
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .profile-avatar svg {
+            width: 24px;
+            height: 24px;
+            fill: #7f8c8d;
+        }
+
+        /* Text Block Stack */
+        .chat-meta {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .chat-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #113f67; /* Navy blue contrast title */
+            letter-spacing: 0.5px;
+        }
+
+        .chat-location {
+            font-size: 11px;
+            font-style: italic;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+        }
+
+        .chat-status {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+        }
+
+        /* Right Side Layout (Action Icons Container) */
+        .header-right {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        /* Icon Utility Buttons */
+        .icon-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            padding: 4px;
+        }
+
+        /* Status alerts layout styling when connecting */
+        .status-alert {
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            animation: flash 1s infinite alternate;
+        }
+
+        @keyframes flash {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
+        }
+
+        /* Full Screen Native Chat Display Container */
+        .chat-frame-container {
+            flex: 1; /* Takes up 100% of the remaining screen height down to the absolute bottom */
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        /* Inline Chat Engine Window Override */
+        .chat-frame-container iframe {
+            position: absolute;
+            /* Shifts the iframe up slightly to slide the inner Tawk header/Francesco under your green header */
+            top: -45px; 
+            left: 0;
+            width: 100%;
+            /* Extends total layout height to account for the hidden top section */
+            height: calc(100% + 45px); 
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <button class="back-btn" onclick="window.history.back()">
+                ← Back
+            </button>
+            
+            <div class="profile-row">
+                <div class="profile-avatar">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <div class="chat-meta">
+                    <span class="chat-title">CHITCHAT</span>
+                    <span class="chat-location">UNITED STATES</span>
+                    <span class="chat-status" id="statusText">online</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="action-icons" id="actionsWrapper">
+                <button class="icon-btn" id="videoBtn" onclick="startVideo()" title="Video Call">📹</button>
+                <button class="icon-btn" id="callBtn" onclick="startCall()" title="Voice Call">📞</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="chat-frame-container">
+        <iframe src="https://tawk.to/chat/6a1d5cab08ce291c2c0010c1/1jq1b4074"></iframe>
+    </div>
+
+    <script>
+        // Online Activity Lifecycle Logic (6-second delay to show Live Clock)
+        setTimeout(() => {
+            const statusText = document.getElementById('statusText');
+            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            statusText.innerText = `last seen ${currentTime}`;
+        }, 6000);
+
+        // Helper to swap icons out for alert text temporarily
+        function triggerStatusAlert(message, duration, callback) {
+            const wrapper = document.getElementById('actionsWrapper');
+            const originalContent = wrapper.innerHTML;
+            
+            wrapper.innerHTML = `<span class="status-alert">${message}</span>`;
+            
+            setTimeout(() => {
+                if (callback) {
+                    callback();
+                } else {
+                    wrapper.innerHTML = originalContent;
+                }
+            }, duration);
+        }
+
+        // Video Action Routine
+        function startVideo() {
+            triggerStatusAlert("CONNECTING...", 4000, () => {
+                triggerStatusAlert("FAILED TO CONNECT.", 3000, () => {
+                    restoreIcons();
+                });
+            });
+        }
+
+        // Call Action Routine
+        function startCall() {
+            triggerStatusAlert("CALLING.", 4000, () => {
+                triggerStatusAlert("FAILED TO CONNECT.", 3000, () => {
+                    restoreIcons();
+                });
+            });
+        }
+
+        // Function to rebuild normal icon states
+        function restoreIcons() {
+            document.getElementById('actionsWrapper').innerHTML = `
+                <button class="icon-btn" id="videoBtn" onclick="startVideo()" title="Video Call">📹</button>
+                <button class="icon-btn" id="callBtn" onclick="startCall()" title="Voice Call">📞</button>
+            `;
+        }
+    </script>
+
+</body>
+</html>
