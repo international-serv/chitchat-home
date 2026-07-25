@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Night Sparkle - Login & Register</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    /* Dark Night Sparkling Background */
+    body {
+      background-color: #030712;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, #a7f3d0, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, #34d399, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 160px 120px, #10b981, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 230px 190px, #a7f3d0, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 310px 80px, #6ee7b7, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 370px 240px, #ffffff, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 400px 400px;
+      animation: sparkle 12s linear infinite;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Night Glow Orbs */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(0,0,0,0) 70%);
+      top: 10%;
+      left: 15%;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(5, 150, 105, 0.12) 0%, rgba(0,0,0,0) 70%);
+      bottom: 10%;
+      right: 15%;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    @keyframes sparkle {
+      0% { background-position: 0 0; }
+      100% { background-position: 400px 800px; }
+    }
+
+    /* Glassmorphism Card Container */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(6, 20, 15, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      border-radius: 20px;
+      padding: 42px 34px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.2);
+    }
+
+    .form-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Titles */
+    h2 {
+      color: #34d399;
+      font-size: 32px;
+      margin-bottom: 6px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
+    }
+
+    p.subtitle {
+      color: #a7f3d0;
+      font-size: 15px;
+      margin-bottom: 24px;
+      opacity: 0.85;
+      font-style: italic;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #6ee7b7;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.3s ease;
+      background-color: rgba(2, 44, 34, 0.6);
+      color: #ecfdf5;
+    }
+
+    input::placeholder {
+      color: #047857;
+    }
+
+    input:focus, select:focus {
+      border-color: #34d399;
+      box-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
+      background-color: rgba(2, 44, 34, 0.85);
+    }
+
+    select option {
+      background-color: #064e3b;
+      color: #ecfdf5;
+    }
+
+    /* Phone Group */
+    .phone-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .phone-group select {
+      width: 42%;
+      cursor: pointer;
+    }
+
+    .phone-group input {
+      width: 58%;
+    }
+
+    /* Password Eye Wrapper */
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper input {
+      padding-right: 44px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #34d399;
+      transition: color 0.2s;
+    }
+
+    .toggle-password:hover {
+      color: #a7f3d0;
+    }
+
+    .toggle-password svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Glowing Green Button */
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      color: #022c22;
+      margin-top: 10px;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+      box-shadow: 0 0 28px rgba(52, 211, 153, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .switch-text {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 15px;
+      color: #a7f3d0;
+    }
+
+    .switch-text a {
+      color: #34d399;
+      font-weight: 900;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+
+    .switch-text a:hover {
+      color: #6ee7b7;
+      text-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+    }
+
+    /* CUSTOM POPUP MODAL STYLES */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .popup-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popup-card {
+      background: rgba(6, 26, 19, 0.95);
+      border: 2px solid #34d399;
+      border-radius: 20px;
+      padding: 36px 28px;
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 0 45px rgba(52, 211, 153, 0.35);
+      transform: scale(0.85);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .popup-overlay.active .popup-card {
+      transform: scale(1);
+    }
+
+    .popup-card.error-border {
+      border-color: #f87171;
+      box-shadow: 0 0 45px rgba(248, 113, 113, 0.35);
+    }
+
+    .popup-icon-container {
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #34d399;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      text-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
+    }
+
+    .error-border .popup-title {
+      color: #f87171;
+      text-shadow: 0 0 10px rgba(248, 113, 113, 0.4);
+    }
+
+    /* Spinner and Icons */
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(52, 211, 153, 0.2);
+      border-top: 4px solid #34d399;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .checkmark-svg, .error-svg {
+      width: 52px;
+      height: 52px;
+      animation: pulseIcon 0.5s ease;
+    }
+
+    @keyframes pulseIcon {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    
+    <!-- LOGIN FORM -->
+    <div id="login-form" class="form-container">
+      <h2>WELCOME BACK</h2>
+      <p class="subtitle">Enter your credentials to enter the night.</p>
+
+      <form onsubmit="handleLogin(event)" novalidate>
+        <div class="form-group">
+          <label for="login-email">Email Address</label>
+          <input type="email" id="login-email" placeholder="name@example.com">
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="login-password" placeholder="••••••••">
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('login-password', this)">
+              <svg viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">LOG IN</button>
+      </form>
+
+      <p class="switch-text">
+        Don't have an account? <a onclick="showRegister()">Register here</a>
+      </p>
+    </div>
+
+
+    <!-- REGISTER FORM -->
+    <div id="register-form" class="form-container hidden">
+      <h2>CREATE ACCOUNT</h2>
+      <p class="subtitle">Fill in all your details to create your account.</p>
+
+      <form id="reg-form-element" onsubmit="handleRegister(event)" novalidate>
+        <div class="form-group">
+          <label for="reg-username">Username</label>
+          <input type="text" id="reg-username" placeholder="johndoe">
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email">Email Address</label>
+          <input type="email" id="reg-email" placeholder="name@example.com">
+        </div>
+
+        <div class="form-group">
+          <label>Mobile Phone Number</label>
+          <div class="phone-group">
+            <select id="reg-country-code">
+              <option value="+254">🇰🇪 +254 (KE)</option>
+              <option value="+1">🇺🇸 +1 (USA)</option>
+              <option value="+44">🇬🇧 +44 (UK)</option>
+              <option value="+91">🇮🇳 +91 (IN)</option>
+              <option value="+27">🇿🇦 +27 (ZA)</option>
+              <option value="+234">🇳🇬 +234 (NG)</option>
+              <option value="+61">🇦🇺 +61 (AU)</option>
+            </select>
+            <input type="tel" id="reg-phone" placeholder="712345678">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="reg-password" placeholder="••••••••">
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('reg-password', this)">
+              <svg viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-confirm-password">Confirm Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="reg-confirm-password" placeholder="••••••••">
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('reg-confirm-password', this)">
+              <svg viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">CONFIRM & REGISTER</button>
+      </form>
+
+      <p class="switch-text">
+        Already have an account? <a onclick="showLogin()">Log in here</a>
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- CUSTOM POPUP MODAL -->
+  <div id="popup-overlay" class="popup-overlay">
+    <div id="popup-card" class="popup-card">
+      <div id="popup-icon" class="popup-icon-container"></div>
+      <h3 id="popup-title" class="popup-title"></h3>
+    </div>
+  </div>
+
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCrnOtYqjXvFZOXNFYa60gazS9-KRB3fX8",
+  authDomain: "chat-ef6f2.firebaseapp.com",
+  projectId: "chat-ef6f2",
+  storageBucket: "chat-ef6f2.firebasestorage.app",
+  messagingSenderId: "971352096063",
+  appId: "1:971352096063:web:25aa2737582e236857678a",
+  measurementId: "G-45J1XLK92R"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+    let popupTimeout = null;
+
+    
+    // Strict Email Syntax Validation
+    function isStrictlyValidEmail(email) {
+      const strictEmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return strictEmailRegex.test(email);
+    }
+
+    // View Switchers
+    function showRegister() {
+      document.getElementById('login-form').classList.add('hidden');
+      document.getElementById('register-form').classList.remove('hidden');
+    }
+
+    function showLogin() {
+      document.getElementById('register-form').classList.add('hidden');
+      document.getElementById('login-form').classList.remove('hidden');
+    }
+
+    // Password Eye Toggle
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const isPassword = input.type === 'password';
+      
+      input.type = isPassword ? 'text' : 'password';
+
+      btn.innerHTML = isPassword ? `
+        <svg viewBox="0 0 24 24">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+          <line x1="1" y1="1" x2="23" y2="23"></line>
+        </svg>
+      ` : `
+        <svg viewBox="0 0 24 24">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      `;
+    }
+
+    // CUSTOM POPUP CONTROLLER
+    function showCustomPopup(title, type, duration = 4000, callback = null) {
+      const overlay = document.getElementById('popup-overlay');
+      const card = document.getElementById('popup-card');
+      const titleEl = document.getElementById('popup-title');
+      const iconContainer = document.getElementById('popup-icon');
+
+      if (popupTimeout) clearTimeout(popupTimeout);
+
+      titleEl.textContent = title;
+
+      if (type === 'loading') {
+        card.classList.remove('error-border');
+        iconContainer.innerHTML = `<div class="spinner"></div>`;
+      } else if (type === 'success') {
+        card.classList.remove('error-border');
+        iconContainer.innerHTML = `
+          <svg class="checkmark-svg" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>`;
+      } else if (type === 'error') {
+        card.classList.add('error-border');
+        iconContainer.innerHTML = `
+          <svg class="error-svg" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>`;
+      }
+
+      overlay.classList.add('active');
+
+      if (duration > 0) {
+        popupTimeout = setTimeout(() => {
+          overlay.classList.remove('active');
+          if (callback) callback();
+        }, duration);
+      }
+    }
+
+    // HANDLE REGISTRATION
+    function handleRegister(event) {
+      event.preventDefault();
+
+      const username = document.getElementById('reg-username').value.trim();
+      const email = document.getElementById('reg-email').value.trim().toLowerCase();
+      const code = document.getElementById('reg-country-code').value;
+      const phone = document.getElementById('reg-phone').value.trim();
+      const pass = document.getElementById('reg-password').value;
+      const confirmPass = document.getElementById('reg-confirm-password').value;
+
+      // 1. ALL FIELDS MUST BE FILLED
+      if (!username || !email || !phone || !pass || !confirmPass) {
+        showCustomPopup("PLEASE FILL IN ALL FIELDS", "error", 4000);
+        return;
+      }
+
+      // 2. STRICT EMAIL FORMAT VALIDATION
+      if (!isStrictlyValidEmail(email)) {
+        showCustomPopup("INCORRECT EMAIL FORMAT", "error", 4000);
+        return;
+      }
+
+      
+      // 4. PASSWORDS MATCH VALIDATION
+      if (pass !== confirmPass) {
+        showCustomPopup("PASSWORDS DO NOT MATCH", "error", 4000);
+        return;
+      }
+
+     showCustomPopup("CREATING YOUR ACCOUNT...", "loading", 0);
+
+createUserWithEmailAndPassword(auth, email, pass)
+.then(async (userCredential) => {
+
+    await setDoc(doc(db, "users", userCredential.user.uid), {
+        username: username,
+        email: email,
+        phone: code + phone,
+        createdAt: new Date().toISOString()
+    });
+
+    showCustomPopup("ACCOUNT CREATED SUCCESSFULLY.", "success", 3000, () => {
+        document.getElementById("login-email").value = email;
+        document.getElementById("reg-form-element").reset();
+        showLogin();
+    });
+
+})
+.catch(error => {
+
+    if (error.code === "auth/email-already-in-use") {
+        showCustomPopup("THE EMAIL IS ALREADY USED", "error", 4000);
+    } else {
+        showCustomPopup(error.message, "error", 4000);
+    }
+
+});
+    }
+
+    // HANDLE LOGIN
+    function handleLogin(event) {
+      event.preventDefault();
+
+      const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
+      const passwordInput = document.getElementById('login-password').value;
+
+      // Check empty fields
+      if (!emailInput || !passwordInput) {
+        showCustomPopup("PLEASE FILL IN ALL FIELDS", "error", 4000);
+        return;
+      }
+
+      // Check Email Format
+      if (!isStrictlyValidEmail(emailInput)) {
+        showCustomPopup("INCORRECT EMAIL FORMAT", "error", 4000);
+        return;
+      }
+
+    showCustomPopup("LOGGING IN...", "loading", 0);
+
+signInWithEmailAndPassword(auth, emailInput, passwordInput)
+.then(() => {
+
+    showCustomPopup("WELCOME BACK!", "success", 3000, () => {
+
+        // Redirect after login
+        // window.location.href = "dashboard.html";
+
+    });
+
+})
+.catch(() => {
+
+    showCustomPopup("INCORRECT EMAIL OR PASSWORD", "error", 4000);
+
+});
+}
+window.showRegister = showRegister;
+window.showLogin = showLogin;
+window.handleRegister = handleRegister;
+window.handleLogin = handleLogin;
+window.togglePasswordVisibility = togglePasswordVisibility;
+  </script>
+</body>
+</html>
